@@ -32,6 +32,19 @@ class User(AbstractUser, AbstractBaseModel):
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
 
+    offers = models.ManyToManyField(
+        "Commodity",
+        through="Offer",
+        through_fields=("user", "commodity"),
+        related_name="offers",
+    )
+    wants = models.ManyToManyField(
+        "Commodity",
+        through="Want",
+        through_fields=("user", "commodity"),
+        related_name="wants",
+    )
+
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.
 
@@ -54,3 +67,25 @@ class Commodity(AbstractBaseModel, TitleDescriptionModel):
     """
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
+class Offer(AbstractBaseModel):
+    """
+    What a user wants to offer
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
+
+    quantity = models.IntegerField()
+
+
+class Want(AbstractBaseModel):
+    """
+    What a user wants to get
+    """
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
+
+    quantity = models.IntegerField()

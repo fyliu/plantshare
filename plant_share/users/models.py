@@ -54,6 +54,9 @@ class User(AbstractUser, AbstractBaseModel):
         """
         return reverse("users:detail", kwargs={"username": self.username})
 
+    def __str__(self):
+        return self.username
+
 
 class Category(AbstractBaseModel, TitleSlugDescriptionModel):
     """
@@ -62,6 +65,9 @@ class Category(AbstractBaseModel, TitleSlugDescriptionModel):
 
     class Meta:
         verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.title
 
 
 class Commodity(AbstractBaseModel, TitleDescriptionModel):
@@ -74,6 +80,9 @@ class Commodity(AbstractBaseModel, TitleDescriptionModel):
     class Meta:
         verbose_name_plural = "Commodities"
 
+    def __str__(self):
+        return f"{self.title} - {self.category.title}"
+
 
 class Offer(AbstractBaseModel):
     """
@@ -82,8 +91,12 @@ class Offer(AbstractBaseModel):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
+    description = models.TextField(blank=True)
 
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.user.__str__()} offers {self.commodity.__str__()}"
 
 
 class Want(AbstractBaseModel):
@@ -94,4 +107,7 @@ class Want(AbstractBaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
 
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.user.__str__()} wants {self.commodity.__str__()}"

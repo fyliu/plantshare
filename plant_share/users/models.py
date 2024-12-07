@@ -60,6 +60,9 @@ class Category(AbstractBaseModel, TitleSlugDescriptionModel):
     Category of commodity
     """
 
+    class Meta:
+        verbose_name_plural = "Categories"
+
 
 class Commodity(AbstractBaseModel, TitleDescriptionModel):
     """
@@ -67,6 +70,9 @@ class Commodity(AbstractBaseModel, TitleDescriptionModel):
     """
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Commodities"
 
 
 class Offer(AbstractBaseModel):
